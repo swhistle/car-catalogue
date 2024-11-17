@@ -1,70 +1,51 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-
-interface ICar {
-    id: string,
-    name: string
-}
-
-const cars: ICar[] = [];
+import { CarsService, ICar } from './cars.service';
 
 
 @Controller('cars')
 export class CarsController {
+    constructor(private readonly carsService: CarsService) {}
+
     @Get()
     getCars(): string {
-        return JSON.parse(JSON.stringify(cars));
+        return JSON.parse(JSON.stringify(this.carsService.findAll()));
     }
 
     @Get(':id')
     getCarById(@Param('id') id: string) {
-        let carById = `Not found car #${id}`;
+        let carById = this.carsService.findOne(id);
 
-        cars.forEach((item) => {
-            if (item.id == id) {
-                carById = JSON.parse(JSON.stringify(item));
-            }
-        })
+        if (carById) {
+            return JSON.parse(JSON.stringify(carById));
+        }
 
-        return carById;
+        return `Not found car #${id}`;
     }
 
     @Post()
     addCar(@Body() car: ICar) {
-        cars.push(car)
-        return car;
+        return this.carsService.create(car);
     }
 
     @Patch(':id')
     updateCar(@Param('id') id: string, @Body() car: ICar) {
-        let carUpdated = `Not found car #${id}`;
+        let carUpdated = this.carsService.update(id, car);
 
-        cars.forEach((item, index) => {
-            if (item.id == id) {
-                const updatedCar = {
-                    ...item,
-                    ...car
-                };
+        if (carUpdated) {
+            return JSON.parse(JSON.stringify(carUpdated));
+        }
 
-                cars.splice(index, 1, updatedCar);
-
-                carUpdated = JSON.parse(JSON.stringify(updatedCar));
-            }
-        })
-
-        return carUpdated;
+        return `Not found car #${id}`;
     }
 
     @Delete(':id')
     removeCar(@Param('id') id: string) {
-        let carRemoved = `Not found car #${id}`;
+        let carRemoved = this.carsService.remove(id);
 
-        cars.forEach((item, index) => {
-            if (item.id == id) {
-                cars.splice(index, 1);
-                carRemoved = JSON.parse(JSON.stringify(item));
-            }
-        })
+        if (carRemoved) {
+            return JSON.parse(JSON.stringify(carRemoved));
+        }
 
-        return carRemoved;
+        return `Not found car #${id}`;
     }
 }
