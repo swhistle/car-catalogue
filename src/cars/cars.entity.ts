@@ -14,12 +14,12 @@ export class Car {
   @Column()
   color: string;
 
-  @Column()
+  @Column('float')
   engine_displacement: number;
 
-  @Column()
+  @Column('int')
   mileage: number;
 
-  @Column()
+  @Column('int')
   year: number;
 }

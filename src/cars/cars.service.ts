@@ -1,52 +1,43 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-export interface ICar {
-    id: string,
-    name: string
-}
+import { Car } from './cars.entity'
 
 @Injectable()
 export class CarsService {
-    private cars: ICar[] = [];
+    constructor(@InjectRepository(Car) private carsRepository: Repository<Car>) {}
     
-    findAll(): ICar[] {
-        return this.cars;
+    findAll(): Promise<Car[]> {
+        return this.carsRepository.find();
     }
 
-    findOne(id: string) {
-        return this.cars.find((item) => item.id === id);
+    findOne(id: number): Promise<Car | null> {
+        return this.carsRepository.findOneBy({id});
     }
 
 
-    create(car: ICar) {
-        this.cars.push(car)
+    create(car: any): Promise<Car[]> {
+        const carNew = this.carsRepository.create(car)
 
-        return car;
+        return this.carsRepository.save(carNew);
     }
 
-    update(id: string, car: ICar) {
-        const carUpdatedIndex = this.cars.findIndex((item) => item.id === id);
+    async update(id: number, car: any) {
+        const carUpdate = await this.carsRepository.preload({
+            id: +id,
+             ...car
+            });
 
-        if (carUpdatedIndex >= 0) {
-            const updatedCar = {
-                ...this.cars[carUpdatedIndex],
-                ...car
-            };
-
-            this.cars.splice(carUpdatedIndex, 1, updatedCar);
-
-            return updatedCar;
+        if (!carUpdate) {
+            return undefined;
         }
+
+        return this.carsRepository.save(carUpdate);
     }
 
-    remove(id: string) {
-        const carRemovedIndex = this.cars.findIndex((item) => item.id === id);
-
-        if (carRemovedIndex >= 0) {
-            this.cars.splice(carRemovedIndex, 1);
-
-            return id;
-        }
+    async remove(id: number) {
+        const carRemove = await this.carsRepository.findOneBy({id})
+        return this.carsRepository.remove(carRemove)
     }
-
 }
