@@ -41,3 +41,22 @@ export const fetchCreateNewCar = async (body: any, callback: any) => {
         console.error('Error:', error);
     }
 };
+
+export const fetchUpdateCar = async (id: string, body: any, callback: any) => {
+    try {
+        console.log('id', id, 'body', body, 'url', `${url}/${id}`);
+        const response = await fetch(`${url}/${id}`, {
+            method: "PATCH",
+            headers: OPTIONS,
+            body: JSON.stringify(body),
+        })
+    
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        callback()
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
