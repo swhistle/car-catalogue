@@ -1,12 +1,12 @@
-## React + TypeScript app
+# React + TypeScript app
 
-# Project setup
+## Project setup
 
 ```bash
 $ npm install
 ```
 
-# Compile and run the project
+## Compile and run the project
 
 ```bash
 # development
