@@ -1,4 +1,5 @@
 #root {
+  height: 100vh;
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -13,4 +14,9 @@
 
 .table-wrapper {
   margin-top: 20px;
+  width: 75vw;
+
+  .ant-pagination-item-link {
+    color: #fff !important;
+  }
 }
