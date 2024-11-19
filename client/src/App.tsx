@@ -30,6 +30,7 @@ function App() {
       </Button>
 
       <Modal open={openModalCreate} setOpen={setOpenModalCreate} updateTableState={setCarsState} />
+
       <div className='table-wrapper'>
         <Table updateTableState={setCarsState} items={cars} />
       </div>
