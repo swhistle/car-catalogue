@@ -1,37 +1,46 @@
 import React, { FC, useState } from "react";
-import { Button, Input, Form, Modal as ModalAntd, InputNumber } from "antd";
+import { Input, Form, Modal as ModalAntd, InputNumber } from "antd";
 import { fetchCreateNewCar } from "../../api/requests";
 
-interface Values {
+interface IValues {
     brand: string;
     model: string;
     color: string;
-    engine_displacement: string;
+    engine_displacement: number;
     mileage: number;
     year: number;
-  }
+}
 
-const Modal: FC = (props: any) => {
+interface IModalProps {
+  open: boolean;
+  setOpen: any;
+  isEditMode?: boolean;
+  record?: IValues | null;
+}
+
+const Modal: FC<IModalProps> = (props: IModalProps) => {
+    const {open, setOpen, isEditMode, record} = props;
+
     const [form] = Form.useForm();
-    const [formValues, setFormValues] = useState<Values>();
-    const [open, setOpen] = useState(false);
+    const [_formValues, setFormValues] = useState<IValues>();
 
-    const onCreate = (values: Values) => {
+    const onCreate = (values: IValues) => {
         fetchCreateNewCar(values, () => {
             setFormValues(values);
             setOpen(false);
         })
     };
 
+    const onEdit = (values: IValues) => {
+      setFormValues(values);
+      setOpen(false);
+    };
+
     return (
-        <>
-        <Button type="primary" onClick={() => setOpen(true)}>
-          Add a Car
-        </Button>
         <ModalAntd
           open={open}
-          title="Create a Car"
-          okText="Create"
+          title={isEditMode ? "Edit a Car record" : "Create a Car record"}
+          okText={isEditMode ? "Edit" : "Create"}
           cancelText="Cancel"
           okButtonProps={{ autoFocus: true, htmlType: 'submit' }}
           onCancel={() => setOpen(false)}
@@ -43,7 +52,7 @@ const Modal: FC = (props: any) => {
               name="form_in_modal"
               initialValues={{ modifier: 'public' }}
               clearOnDestroy
-              onFinish={(values) => onCreate(values)}
+              onFinish={(values) => isEditMode ? onEdit(values) : onCreate(values)}
             >
               {dom}
             </Form>
@@ -53,12 +62,14 @@ const Modal: FC = (props: any) => {
             name="brand"
             label="Brand"
             rules={[{ required: true, message: 'Please input the brand of your car' }]}
+            initialValue={record?.brand || ''}
           >
             <Input placeholder="Brand" />
           </Form.Item>
           <Form.Item
             name="model"
             label="Model"
+            initialValue={record?.model || ''}
             rules={[{ required: true, message: 'Please input the model of your car' }]}
           >
             <Input placeholder="Model" />
@@ -66,6 +77,7 @@ const Modal: FC = (props: any) => {
           <Form.Item
             name="color"
             label="Color"
+            initialValue={record?.color || ''}
             rules={[{ required: true, message: 'Please input the color of your car' }]}
           >
             <Input placeholder="Color" />
@@ -73,26 +85,34 @@ const Modal: FC = (props: any) => {
           <Form.Item
             name="engine_displacement"
             label="Engine displacement"
+            initialValue={record?.engine_displacement || 1.0}
             rules={[{ required: true, message: 'Please input the engine displacement of your car' }]}
           >
-            <Input placeholder="2.0" defaultValue='2.0' />
+            <InputNumber 
+            style={{ width: "100%" }}
+            min={1.0}
+            max={9.9}
+            step="0.1" 
+            placeholder="1.0"
+            />
           </Form.Item>
           <Form.Item
             name="mileage"
             label="Mileage"
+            initialValue={record?.mileage || 0}
             rules={[{ required: true, type: 'number', message: 'Please input the mileage of your car' }]}
           >
-            <InputNumber placeholder="0" defaultValue={0} />
+            <InputNumber placeholder="0" />
           </Form.Item>
           <Form.Item
             name="year"
             label="Year"
+            initialValue={record?.year || 2020}
             rules={[{ required: true, type: 'number', message: 'Please input the production year of your car' }]}
           >
-            <InputNumber placeholder="2020" defaultValue={2020} />
+            <InputNumber placeholder="2020" />
           </Form.Item>
         </ModalAntd>
-      </>
     )
 }
 
