@@ -1,5 +1,7 @@
 import React, { FC, useState } from "react";
-import { Button, Table as TableAntd } from "antd";
+import { Button, Modal as ModalAntd, Table as TableAntd } from "antd";
+
+import { fetchDeleteCar, fetchGetCarsList } from "../../api/requests";
 
 import Modal from '../Modal';
 
@@ -40,9 +42,25 @@ const Table: FC = (props: any) => {
             dataIndex: 'id',
             key: 'id',
             render: (index, record) => (
-              <Button type="primary" onClick={() => showModal(record)}>
-                Edit
-              </Button>
+                <div>
+                    <Button type="primary" onClick={() => showModal(record)}>
+                        Edit
+                    </Button>
+
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            ModalAntd.confirm({
+                            title: 'Delete',
+                            content: 'Are you sure you want to delete this Car record?',
+                            onOk: () => confirmDelete(record),
+                            });
+                        }}
+                        >
+                        Delete
+                    </Button>
+                </div>
+             
             ),
           },
     ];
@@ -56,10 +74,18 @@ const Table: FC = (props: any) => {
         setModalRecord(record);
         setOpenModalEdit(true);
     };
+
+    const confirmDelete = (record) => {
+        const {id} = record;
+
+        fetchDeleteCar(String(id), () => {
+            fetchGetCarsList(updateTableState); // refetch updated list after delete
+        })
+    };
     
     return (
         <>
-            <TableAntd dataSource={items.map((item: any) => ({...item, key: item.id}))} columns={columns} />
+            <TableAntd dataSource={items.map((item: any) => ({...item, key: item.id}))} columns={columns} className="table-wrapper" />
             <Modal open={openModalEdit} setOpen={setOpenModalEdit} isEditMode={true} record={modalRecord} updateTableState={updateTableState} />
         </>
         

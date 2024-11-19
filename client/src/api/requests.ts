@@ -59,3 +59,20 @@ export const fetchUpdateCar = async (id: string, body: any, callback: any) => {
         console.error('Error:', error);
     }
 };
+
+export const fetchDeleteCar = async (id: string, callback?: any) => {
+    try {
+        const response = await fetch(`${url}/${id}`, {
+            method: "DELETE",
+            headers: OPTIONS,
+        })
+    
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        callback()
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
