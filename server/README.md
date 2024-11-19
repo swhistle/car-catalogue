@@ -1,12 +1,12 @@
-## Nest.js app
+# Nest.js app
 
-# Project setup
+## Project setup
 
 ```bash
 $ npm install
 ```
 
-# Compile and run the project
+## Compile and run the project
 
 ```bash
 # development
@@ -19,7 +19,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-# Run tests
+## Run tests
 
 ```bash
 # unit tests
