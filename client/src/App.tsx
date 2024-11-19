@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react'
 import { fetchGetCarsList } from './api/requests';
 
 import './App.css'
+import Modal from './components/Modal';
 import Table from './components/Table';
 
 
@@ -21,6 +22,7 @@ function App() {
   return (
     <>
      <h1>Car catalogue</h1>
+     <Modal />
      <Table items={cars} />
     </>
   )

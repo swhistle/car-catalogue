@@ -23,3 +23,21 @@ export const fetchGetCarsList = async (callback: any) => {
         console.error('Error:', error);
     }
 };
+
+export const fetchCreateNewCar = async (body: any, callback: any) => {
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: OPTIONS,
+            body: JSON.stringify(body),
+        })
+    
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        callback()
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
