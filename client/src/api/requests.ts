@@ -5,7 +5,7 @@ const OPTIONS = {
     "Content-type": "application/json; charset=UTF-8"
 };
 
-export const fetchGetCarsList = async (callback: any) => {
+export const fetchGetCarsList = async (callback?: any) => {
     try {
         const response = await fetch(url, {
             method: "GET",
@@ -44,7 +44,6 @@ export const fetchCreateNewCar = async (body: any, callback: any) => {
 
 export const fetchUpdateCar = async (id: string, body: any, callback: any) => {
     try {
-        console.log('id', id, 'body', body, 'url', `${url}/${id}`);
         const response = await fetch(`${url}/${id}`, {
             method: "PATCH",
             headers: OPTIONS,

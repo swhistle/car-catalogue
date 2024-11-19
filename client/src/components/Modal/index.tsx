@@ -1,6 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { Input, Form, Modal as ModalAntd, InputNumber } from "antd";
-import { fetchCreateNewCar, fetchUpdateCar } from "../../api/requests";
+import { fetchCreateNewCar, fetchGetCarsList, fetchUpdateCar } from "../../api/requests";
 
 type ValuesT = {
     brand: string;
@@ -16,23 +16,26 @@ interface IModalProps {
   setOpen: any;
   isEditMode?: boolean;
   record?: {id: number} & ValuesT | null;
+  updateTableState?: any;
 }
 
 const Modal: FC<IModalProps> = (props: IModalProps) => {
-    const {open, setOpen, isEditMode, record} = props;
+    const {open, setOpen, isEditMode, record, updateTableState} = props;
 
     const [form] = Form.useForm();
     const [_formValues, setFormValues] = useState<ValuesT>();
 
     const onCreate = (values: ValuesT) => {
-        fetchCreateNewCar(values, () => {
-            setFormValues(values);
-            setOpen(false);
-        })
+      fetchCreateNewCar(values, () => {
+        fetchGetCarsList(updateTableState); // refetch updated list after edit
+        setFormValues(values);
+        setOpen(false);
+      })
     };
 
     const onEdit = (values: ValuesT) => {
       fetchUpdateCar(String(record?.id), values, () => {
+        fetchGetCarsList(updateTableState); // refetch updated list after edit
         setFormValues(values);
         setOpen(false);
       })

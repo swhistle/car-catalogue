@@ -29,9 +29,9 @@ function App() {
         Add a Car record
       </Button>
 
-      <Modal open={openModalCreate} setOpen={setOpenModalCreate} />
+      <Modal open={openModalCreate} setOpen={setOpenModalCreate} updateTableState={setCarsState} />
       <div className='table-wrapper'>
-        <Table items={cars} />
+        <Table updateTableState={setCarsState} items={cars} />
       </div>
     </div>
   )

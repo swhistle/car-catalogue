@@ -45,7 +45,9 @@ const Table: FC = (props: any) => {
               </Button>
             ),
           },
-      ];
+    ];
+
+    const {items, updateTableState} = props;
 
     const [modalRecord, setModalRecord] = useState(null);
     const [openModalEdit, setOpenModalEdit] = useState(false);
@@ -57,8 +59,8 @@ const Table: FC = (props: any) => {
     
     return (
         <>
-            <TableAntd dataSource={props.items.map((item: any) => ({...item, key: item.id}))} columns={columns} />
-            <Modal open={openModalEdit} setOpen={setOpenModalEdit} isEditMode={true} record={modalRecord} />
+            <TableAntd dataSource={items.map((item: any) => ({...item, key: item.id}))} columns={columns} />
+            <Modal open={openModalEdit} setOpen={setOpenModalEdit} isEditMode={true} record={modalRecord} updateTableState={updateTableState} />
         </>
         
     )
